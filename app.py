@@ -7,14 +7,14 @@ import plotly.express as px
 from config import INFLUX_URL, INFLUX_TOKEN, ORG, BUCKET
 
 # Función para obtener datos desde InfluxDB
-def query_data(measurement, field, range_minutes=60):
+def query_data(airSensor, temperature, humididty, range_minutes=60):
     client = InfluxDBClient(url=INFLUX_URL, token=INFLUX_TOKEN, org=ORG)
     query_api = client.query_api()
 
     query = f'''
     from(bucket: "{BUCKET}")
       |> range(start: -{range_minutes}m)
-      |> filter(fn: (r) => r["_measurement"] == "{measurement}" and r["_field"] == "{field}")
+      |> filter(fn: (r) => r["_measurement"] == "{airSensor}" and r["_field"] == "{temperature}")
       |> sort(columns: ["_time"])
     '''
 
