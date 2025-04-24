@@ -92,28 +92,23 @@ else:
     st.info("Sin datos de movimiento en este rango.")
 
 
-import streamlit.components.v1 as components
-
-# Mostrar animación SVG del helecho según cambio de humedad
 st.subheader("🌿 Estado animado del helecho")
 
-if not hum_df.empty and len(hum_df) >= 2:
-    humedad_inicio = hum_df.iloc[0]["humidity"]
-    humedad_final = hum_df.iloc[-1]["humidity"]
-    delta = humedad_final - humedad_inicio
+if not hum_df.empty:
+    humedad_actual = hum_df.iloc[-1]["humidity"]
 
-    if delta > 2:
-        escala = 1.3
-        color = "#4CAF50"  # verde más vivo
-        mensaje = "La planta se siente bien 🌱"
-    elif delta < -2:
+    if humedad_actual < 50:
         escala = 0.8
         color = "#A1887F"  # marrón seco
-        mensaje = "La planta necesita agua 🥀"
+        mensaje = f"Humedad baja ({humedad_actual:.1f}%) – tu planta necesita agua 🥀"
+    elif humedad_actual > 75:
+        escala = 1.3
+        color = "#4CAF50"  # verde exuberante
+        mensaje = f"Humedad alta ({humedad_actual:.1f}%) – la planta está muy bien 🌳"
     else:
         escala = 1.0
-        color = "#81C784"  # verde normal
-        mensaje = "Estado estable 🍃"
+        color = "#81C784"  # verde saludable
+        mensaje = f"Humedad óptima ({humedad_actual:.1f}%) – todo está en equilibrio 🍃"
 
     fern_svg = f"""
     <div style="text-align: center;">
@@ -133,4 +128,4 @@ if not hum_df.empty and len(hum_df) >= 2:
     """
     components.html(fern_svg, height=250)
 else:
-    st.info("No hay suficientes datos de humedad para animar el helecho.")
+    st.info("No hay datos recientes de humedad para mostrar el helecho.")
