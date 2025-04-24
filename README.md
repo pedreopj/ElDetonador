@@ -30,10 +30,10 @@ Inspirado en el símbolo maorí del helecho en espiral (“koru”), este proyec
 ## 🚀 Cómo ejecutar el proyecto
 
 1. **Clona este repositorio:**
-   ```
-   git clone https://github.com/tuusuario/koru.git
-   cd koru
-   ```
+```
+git clone https://github.com/tuusuario/koru.git
+cd koru
+```
 
 2.  **Instala las dependencias:**
    ```
