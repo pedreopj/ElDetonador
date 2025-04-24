@@ -2,11 +2,36 @@ import streamlit as st
 from influxdb_client import InfluxDBClient
 import pandas as pd
 import plotly.express as px
+import numpy as np
 
 # Configuración desde archivo local
 from config import INFLUX_URL, INFLUX_TOKEN, ORG, BUCKET
 
-# Función para obtener datos desde InfluxDB
+# Función para consultar múltiples campos de un mismo measurement
+def query_accelerometer_data(range_minutes=60):
+    client = InfluxDBClient(url=INFLUX_URL, token=INFLUX_TOKEN, org=ORG)
+    query_api = client.query_api()
+
+    query = f'''
+    import "math"
+    from(bucket: "{BUCKET}")
+      |> range(start: -{range_minutes}m)
+      |> filter(fn: (r) => r["_measurement"] == "accelerometer" and r["_field"] == "ax" or r["_field"] == "ay" or r["_field"] == "az")
+      |> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")
+      |> sort(columns: ["_time"])
+    '''
+
+    result = query_api.query_data_frame(query)
+    if result.empty:
+        return pd.DataFrame()
+
+    # Renombrar y calcular magnitud
+    result = result.rename(columns={"_time": "time"})
+    result["accel_magnitude"] = np.sqrt(result["ax"]**2 + result["ay"]**2 + result["az"]**2)
+    result["time"] = pd.to_datetime(result["time"])
+    return result[["time", "accel_magnitude"]]
+
+# Consulta simple de un solo campo
 def query_data(measurement, field, range_minutes=60):
     client = InfluxDBClient(url=INFLUX_URL, token=INFLUX_TOKEN, org=ORG)
     query_api = client.query_api()
@@ -38,10 +63,10 @@ st.markdown("Monitorea en tiempo real los datos de tu planta: temperatura, humed
 # Selector de tiempo
 range_minutes = st.slider("Selecciona el rango de tiempo (en minutos):", 10, 180, 60)
 
-# Consulta de datos
+# Consultas
 temp_df = query_data("airSensor", "temperature", range_minutes)
 hum_df = query_data("airSensor", "humidity", range_minutes)
-mov_df = query_data("accelerometer", "ax", range_minutes)
+mov_df = query_accelerometer_data(range_minutes)
 
 # Visualización
 col1, col2 = st.columns(2)
