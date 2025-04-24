@@ -39,8 +39,8 @@ st.markdown("Monitorea en tiempo real los datos de tu planta: temperatura, humed
 range_minutes = st.slider("Selecciona el rango de tiempo (en minutos):", 10, 180, 60)
 
 # Consulta de datos
-temp_df = query_data("clima", "temperature", range_minutes)
-hum_df = query_data("clima", "humidity", range_minutes)
+temp_df = query_data("airSensor", "temperature", range_minutes)
+hum_df = query_data("airSensor", "humidity", range_minutes)
 mov_df = query_data("movimiento", "accel_magnitude", range_minutes)
 
 # Visualización
