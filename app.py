@@ -30,7 +30,31 @@ def query_accelerometer_data(range_minutes=60):
     result["accel_magnitude"] = np.sqrt(result["ax"]**2 + result["ay"]**2 + result["az"]**2)
     result["time"] = pd.to_datetime(result["time"])
     return result[["time", "accel_magnitude"]]
+ 
+ #Rotoscopio
+def query_accelerometer_data(range_minutes=60):
+    client = InfluxDBClient(url=INFLUX_URL, token=INFLUX_TOKEN, org=ORG)
+    query_api = client.query_api()
 
+    query = f'''
+    import "math"
+    from(bucket: "{BUCKET}")
+      |> range(start: -{range_minutes}m)
+      |> filter(fn: (r) => r["_measurement"] == "gyroscope" and r["_field"] == "gx" or r["_field"] == "gy" or r["_field"] == "gz")
+      |> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")
+      |> sort(columns: ["_time"])
+    '''
+
+    result = query_api.query_data_frame(query)
+    if result.empty:
+        return pd.DataFrame()
+
+    # Renombrar y calcular magnitud
+    result = result.rename(columns={"_time": "time"})
+    result["gyro_magnitude"] = np.sqrt(result["gx"]**2 + result["gy"]**2 + result["gz"]**2)
+    result["time"] = pd.to_datetime(result["time"])
+    return result[["time", "gyro_magnitude"]]
+    
 # Consulta simple de un solo campo
 def query_data(measurement, field, range_minutes=60):
     client = InfluxDBClient(url=INFLUX_URL, token=INFLUX_TOKEN, org=ORG)
