@@ -69,5 +69,5 @@ koru/
 
 Proyecto desarrollado para la clase de Computación Física e Internet de las Cosas, carrera de Diseño Interactivo.
 
-Desarrollado por: Miguel Angel Carrillo/n
+Desarrollado por: Miguel Angel Carrillo\n
 Licencia: MIT
