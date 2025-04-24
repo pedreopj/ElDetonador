@@ -35,15 +35,15 @@ Inspirado en el símbolo maorí del helecho en espiral (“koru”), este proyec
    cd koru
 
 2.  **Instala las dependencias:**
-
+   ```bash
    pip install -r requirements.txt
 
 3.  **Configura las variables de conexión a InfluxDB en el archivo**
-
+   ```bash
    config.py
 
 4.  **Ejecuta la aplicación con Streamlit:**
-
+   ```bash
    streamlit run app.py
 
 5.  **Accede a la interfaz en tu navegador:**
