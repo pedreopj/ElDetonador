@@ -40,7 +40,7 @@ def query_gyroscope_data(range_minutes=60):
     import "math"
     from(bucket: "{BUCKET}")
       |> range(start: -{range_minutes}m)
-      |> filter(fn: (r) => r["_measurement"] == "gyroscope" and r["_field"] == "gx" or r["_field"] == "gy" or r["_field"] == "gz")
+      |> filter(fn: (r) => r["_measurement"] == "gyro_magnitude" and r["_field"] == "gyro_x" or r["_field"] == "gyro_y" or r["_field"] == "gyro_z")
       |> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")
       |> sort(columns: ["_time"])
     '''
