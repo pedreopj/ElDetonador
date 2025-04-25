@@ -83,9 +83,9 @@ def query_data(measurement, field, range_minutes=60):
     return df
 
 def estado_planta(humedad):
-    if humedad > 70:
+    if humedad > 68:
         return "feliz"
-    elif 40 <= humedad <= 70:
+    elif 67 <= humedad <= 68:
         return "normal"
     else:
         return "triste"
