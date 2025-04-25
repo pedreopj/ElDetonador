@@ -40,7 +40,7 @@ def query_gyroscope_data(range_minutes=60):
     import "math"
     from(bucket: "{BUCKET}")
       |> range(start: -{range_minutes}m)
-      |> filter(fn: (r) => r["_measurement"] == "gyro_magnitude" and r["_field"] == "gyro_x" or r["_field"] == "gyro_y" or r["_field"] == "gyro_z")
+      |> filter(fn: (r) => r["_measurement"] == "gyro_magnitude" and r["_field"] == "gx" or r["_field"] == "gy" or r["_field"] == "gz")
       |> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")
       |> sort(columns: ["_time"])
     '''
@@ -118,6 +118,6 @@ else:
 
 st.subheader("📈 Gyroscopio (magnitud del Gyroscopio)")
 if not mov_df.empty:
-    st.plotly_chart(px.line(mov_df, x="time", y="gyro_magnitude", title="Movimiento"), use_container_width=True)
+    st.plotly_chart(px.line(mov_df, x="time", y="gyro_magnitude", title="Gyroscopio"), use_container_width=True)
 else:
     st.info("Sin datos de movimiento en este rango.")
