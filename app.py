@@ -117,7 +117,7 @@ else:
     st.info("Sin datos de movimiento en este rango.")
 
 st.subheader("📈 Gyroscopio (magnitud del Gyroscopio)")
-if not mov_df.empty:
-    st.plotly_chart(px.line(mov_df, x="time", y="gyro_magnitude", title="Gyroscopio"), use_container_width=True)
+if not gyr_df.empty:
+    st.plotly_chart(px.line(gyr_df, x="time", y="gyro_magnitude", title="Gyroscopio"), use_container_width=True)
 else:
     st.info("Sin datos de movimiento en este rango.")
