@@ -3,7 +3,7 @@ from influxdb_client import InfluxDBClient
 import pandas as pd
 import plotly.express as px
 import numpy as np
-import matplotlibe.pyplot as plt
+import matplotlib.pyplot as plt
 from io import BytesIO
 from PIL import Image
 
