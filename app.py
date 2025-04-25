@@ -3,6 +3,9 @@ from influxdb_client import InfluxDBClient
 import pandas as pd
 import plotly.express as px
 import numpy as np
+import matplotlibe.pyplot as plt
+from io import BytesIO
+from PIL import Image
 
 # Configuración desde archivo local
 from config import INFLUX_URL, INFLUX_TOKEN, ORG, BUCKET
@@ -79,6 +82,44 @@ def query_data(measurement, field, range_minutes=60):
         df["time"] = pd.to_datetime(df["time"])
     return df
 
+def estado_planta(humedad)
+    if humedad > 70:
+        return "feliz"
+    elif 40 <= humedad <= 70:
+        return "normal"
+    else:
+        return "triste"
+        
+def dibujar_planta(estado):
+    fig, ax = plt.subplots(figsize=(4, 4))
+    ax.set_xlim(0, 10)
+    ax.set_ylim(0, 10)
+    ax.axis('off')
+    maceta = plt.Rectangle((3.5, 1), 3, 2, color="saddlebrown")
+    ax.add_patch(maceta)
+    ax.plot([5, 5], [3, 7], color="green", linewidth=5)
+    if estado == "feliz":
+        ax.plot([5, 6], [6, 7], color="green", linewidth=4)
+        ax.plot([5, 4], [6, 7], color="green", linewidth=4)
+        ax.plot([5, 6.5], [5, 6], color="green", linewidth=4)
+        cara = ":D"
+    elif estado == "normal":
+        ax.plot([5, 6], [6, 6.5], color="green", linewidth=4)
+        ax.plot([5, 4], [6, 6.5], color="green", linewidth=4)
+        cara = ":|"
+    else:
+        ax.plot([5, 6], [6, 5.5], color="green", linewidth=4)
+        ax.plot([5, 4], [6, 5.5], color="green", linewidth=4)
+        cara = ":("
+    ax.text(5, 1.5, cara, fontsize=20, ha='center', va='center')
+    buf = BytesIO()
+    plt.savefig(buf, format="png", bbox_inches='tight')
+    buf.seek(0)
+    img = Image.open(buf)
+    plt.close(fig)
+    return img
+
+
 # Configuración de la app
 st.set_page_config(page_title="🌿 Koru – Jardín Inteligente", layout="wide")
 st.title("🌿 Koru – Jardín Inteligente para la Calma")
@@ -121,3 +162,13 @@ if not gyr_df.empty:
     st.plotly_chart(px.line(gyr_df, x="time", y="gyro_magnitude", title="Gyroscopio"), use_container_width=True)
 else:
     st.info("Sin datos de movimiento en este rango.")
+
+st.subheader("🪴 Estado de la Planta según la Humedad")
+if not hum_df.empty:
+    humedad_actual = hum_df["humidity"].iloc[-1]
+    estado = estado_planta(humedad_actual)
+    st.markdown(f"**Humedad actual:** {humedad_actual:.1f}% – Estado: **{estado}**")
+    imagen_planta = dibujar_planta(estado)
+    st.image(imagen_planta, caption=f"Planta {estado}", use_column_width=False)
+else:
+    st.info("Sin datos recientes de humedad para mostrar el estado de la planta.")
