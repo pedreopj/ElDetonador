@@ -32,7 +32,7 @@ def query_accelerometer_data(range_minutes=60):
     return result[["time", "accel_magnitude"]]
  
  #Rotoscopio
-def query_accelerometer_data(range_minutes=60):
+def query_gyroscope_data(range_minutes=60):
     client = InfluxDBClient(url=INFLUX_URL, token=INFLUX_TOKEN, org=ORG)
     query_api = client.query_api()
 
@@ -91,6 +91,7 @@ range_minutes = st.slider("Selecciona el rango de tiempo (en minutos):", 10, 180
 temp_df = query_data("airSensor", "temperature", range_minutes)
 hum_df = query_data("airSensor", "humidity", range_minutes)
 mov_df = query_accelerometer_data(range_minutes)
+gyr_df = query_gyroscope_data(range_minutes)
 
 # Visualización
 col1, col2 = st.columns(2)
