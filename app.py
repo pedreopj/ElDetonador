@@ -82,7 +82,7 @@ def query_data(measurement, field, range_minutes=60):
         df["time"] = pd.to_datetime(df["time"])
     return df
 
-def estado_planta(humedad)
+def estado_planta(humedad):
     if humedad > 70:
         return "feliz"
     elif 40 <= humedad <= 70:
