@@ -166,6 +166,7 @@ else:
 st.subheader("🪴 Estado de la Planta según la Humedad")
 if not hum_df.empty:
     humedad_actual = hum_df["humidity"].iloc[-1]
+    humedad_actual = 50
     estado = estado_planta(humedad_actual)
     st.markdown(f"**Humedad actual:** {humedad_actual:.1f}% – Estado: **{estado}**")
     imagen_planta = dibujar_planta(estado)
